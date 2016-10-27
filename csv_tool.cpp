@@ -57,14 +57,15 @@ string trim_file_name(const string &filename){
  * function to get all the column names 
  */
 void parse_cvs_first_line(string line){
-    line.pop_back();
     int len = line.length();
     int i = 0;
     col_names.clear();
     while(i < len){
         string tmp = "";
         while(i < len && line[i] != ',') {
-            tmp += line[i++];
+            //only add alphabet and digit
+            if(isalnum(line[i])) tmp += line[i];
+            i++;
         }
         col_names.push_back(tmp);
         i++;
