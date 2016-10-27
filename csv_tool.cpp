@@ -109,6 +109,9 @@ void parse_cvs_num_line(string line){
         col_nums[idx++].push_back(num);
         i++;
     }
+    while(idx < col_names.size()){
+        col_nums[idx++].push_back(0.0);
+    }
 }
 
 /* 
@@ -233,7 +236,7 @@ void process_min_cmd(){
     //get current column index, index in the buffer starts with 0
     int idx = stoi(commands[2])-1;
     if(idx < 0 || idx >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx].size() == 0){
@@ -261,7 +264,7 @@ void process_max_cmd(){
     //get current column index, index in the buffer starts with 0
     int idx = stoi(commands[2])-1;
     if(idx < 0 || idx >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx].size() == 0){
@@ -289,7 +292,7 @@ void process_median_cmd(){
     //get current column index, index in the buffer starts with 0
     int idx = stoi(commands[2])-1;
     if(idx < 0 || idx >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx].size() == 0){
@@ -328,7 +331,7 @@ void process_average_cmd(){
     //get current column index, index in the buffer starts with 0
     int idx = stoi(commands[2])-1;
     if(idx < 0 || idx >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx].size() == 0){
@@ -358,6 +361,7 @@ void print_new_col(const vector<double> &new_col){
 }
 
 void if_write_new_col_to_file(){
+    cout<<"Calculation finished"<<endl;
     cout<<"Write new column to the file? yes(y) or no(n): ";
     col_nums.push_back(new_col);
     string cmd;
@@ -388,7 +392,7 @@ void if_write_new_col_to_file(){
             }
             col_names.push_back(cmd);
             write_csv_file(csv_file_name);
-            cout<<"Operation success, already add a new column"<<endl;
+            cout<<"Column "<<cmd<<" added successfully"<<endl;
             break;
         }
     }
@@ -413,7 +417,7 @@ void process_col_add_cmd(){
     int idx1 = stod(commands[2])-1;
     int idx2 = stod(commands[3])-1;
     if(idx1 < 0 || idx1 >= col_nums.size() || idx2 < 0 || idx2 >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx1].size() == 0 && col_nums[idx2].size() == 0){
@@ -450,7 +454,7 @@ void process_col_sub_cmd(){
     int idx1 = stod(commands[2])-1;
     int idx2 = stod(commands[3])-1;
     if(idx1 < 0 || idx1 >= col_nums.size() || idx2 < 0 || idx2 >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx1].size() == 0 && col_nums[idx2].size() == 0){
@@ -486,7 +490,7 @@ void process_col_mul_cmd(){
     int idx1 = stod(commands[2])-1;
     int idx2 = stod(commands[3])-1;
     if(idx1 < 0 || idx1 >= col_nums.size() || idx2 < 0 || idx2 >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx1].size() == 0 && col_nums[idx2].size() == 0){
@@ -523,7 +527,7 @@ void process_col_div_cmd(){
     int idx1 = stod(commands[2])-1;
     int idx2 = stod(commands[3])-1;
     if(idx1 < 0 || idx1 >= col_nums.size() || idx2 < 0 || idx2 >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx1].size() == 0 && col_nums[idx2].size() == 0){
@@ -632,7 +636,7 @@ void process_inner_join_cmd(){
     int idx1 = stod(commands[3])-1;
     int idx2 = stod(commands[4])-1;
     if(idx1 < 0 || idx1 >= col_nums.size() || idx2 < 0 || idx2 >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     if(col_nums[idx1].size() == 0 || col_nums[idx2].size() == 0){
@@ -657,6 +661,7 @@ void process_inner_join_cmd(){
     }
     cout<<"The inner join result of column "<<commands[3]
         <<" and column "<<commands[4]<<" is: "<<endl;
+    sort(inner_join_res.begin(), inner_join_res.end());
     print_new_col(inner_join_res);
 }
 
@@ -679,7 +684,7 @@ void process_outer_join_cmd(){
     int idx1 = stoi(commands[3])-1;
     int idx2 = stoi(commands[4])-1;
     if(idx1 < 0 || idx1 >= col_nums.size() || idx2 < 0 || idx2 >= col_nums.size()){
-        cout<<"Error: column index is not valid"<<endl;
+        cout<<"Error: column index is out of range"<<endl;
         return;
     }
     //same column, empty result
@@ -711,6 +716,7 @@ void process_outer_join_cmd(){
     }
     cout<<"The outer join result of column "<<commands[3]
         <<" and column "<<commands[4]<<" is: "<<endl;
+    sort(outer_join_res.begin(), outer_join_res.end());
     print_new_col(outer_join_res);
 }
 
@@ -729,7 +735,7 @@ void process_list_col_names_cmd(){
             cout<<"Current file is empty"<<endl;
             return;
         }
-        cout<<"All column names: "<<endl;
+        cout<<"There are totally "<<col_names.size()<<" columns"<<endl;
         int idx = 1;
         for(string name: col_names){
             cout<<name<<'('<<(idx++)<<')'<<' ';
@@ -740,14 +746,13 @@ void process_list_col_names_cmd(){
     if(commands.size() == 3){
         int idx = stoi(commands[2]) - 1;
         if(idx < 0 || idx >= col_names.size()){
-            cout<<"Error: column index is out of boundary"<<endl;
+            cout<<"Error: column index is out of range"<<endl;
             return;
         }
         cout<<col_names[idx]<<endl;
         for(auto num: col_nums[idx]){
-            cout<<num<<' ';
+            cout<<num<<endl;
         }
-        cout<<endl;
     }
 }
 
@@ -757,22 +762,16 @@ void process_list_col_names_cmd(){
  * delete the column with a name age
  * each column should have a unique name
  */
-void process_delete_col(){
-    //only have 1 parameter 
-    if(commands.size() != 3 || commands[1] != "col" || commands[2].size() == 0){
+void process_delete_col_cmd(){
+    //must have 3 parameter 
+    if(commands.size() != 3 || commands[1] != "col" || !valid_num(commands[2])){
         cout<<"Error: command is not valid"<<endl;
         return;
     }
-    //find the index of the column 
-    int name_idx = -1;
-    for(int i = 0; i < col_names.size(); i++){
-        if(commands[2] == col_names[i]){
-            name_idx = i;
-        }
-    }
+    int idx = stoi(commands[2]) - 1;
     //if cannot find, show error and return 
-    if(name_idx == -1){
-        cout<<"Error: cannot find a column with the name "<<commands[2]<<endl;
+    if(idx < 0 || idx >= col_names.size()){
+        cout<<"Error: the column index is out of range"<<endl;
         return;
     }
 
@@ -785,12 +784,53 @@ void process_delete_col(){
     }
     if(cmd == "y" || cmd == "yes" || cmd == "Y" || cmd == "YES" || cmd == "Yes"){
         //delete the column name
-        col_names.erase(col_names.begin() + name_idx);
+        col_names.erase(col_names.begin() + idx);
         //delete all the data in the column
-        col_nums.erase(col_nums.begin() + name_idx);
+        col_nums.erase(col_nums.begin() + idx);
         //update the csv file
         write_csv_file(csv_file_name);
-        cout<<"deletion finished"<<endl;
+        cout<<"Deletion finished"<<endl;
+    }
+}
+
+/* 
+ * show the size of a column
+ * example: size col 2
+ * show the size of column 2
+ */
+void process_size_col_cmd(){
+    //must have 3 parameter 
+    if(commands.size() != 3 || commands[1] != "col" || !valid_num(commands[2])){
+        cout<<"Error: command is not valid"<<endl;
+        return;
+    }
+    int idx = stoi(commands[2]) - 1;
+    //if cannot find, show error and return 
+    if(idx < 0 || idx >= col_names.size()){
+        cout<<"Error: the column index is out of range"<<endl;
+        return;
+    }
+
+    cout<<"The size of column "<<idx+1<<" is "<<col_nums[idx].size()<<endl;
+}
+
+/* 
+ * process the quit command 
+ */
+void process_quit_cmd(){
+    //only 1 parameter 
+    if(commands.size() != 1){
+        cout<<"Error: command is not valid"<<endl;
+        return;
+    }
+    cout<<"Quit? yes(y) or no(n): ";
+    string cmd;
+    getline(cin, cmd);
+    if(cmd == "n" || cmd == "no" || cmd == "N" || cmd == "NO" || cmd == "No"){
+        return;
+    }
+    if(cmd == "y" || cmd == "yes" || cmd == "Y" || cmd == "YES" || cmd == "Yes"){
+        exit(0);
     }
 }
 
@@ -806,7 +846,9 @@ void parse_cmd(string cmd){
         while(i < cmd.length() && cmd[i] != ' ') { 
             command += cmd[i++];
         }
-        commands.push_back(command);
+        if(command != ""){ 
+            commands.push_back(command);
+        }
         while(i < cmd.length() && cmd[i] == ' ') {
             i++;
         }
@@ -847,7 +889,13 @@ void parse_cmd(string cmd){
         process_list_col_names_cmd();
     }
     else if(commands[0] == "del"){
-        process_delete_col();
+        process_delete_col_cmd();
+    }
+    else if(commands[0] == "size"){
+        process_size_col_cmd();
+    }
+    else if(commands[0] == "quit"){
+        process_quit_cmd();
     }
     else{
         cout<<"Error: "<<"\""+cmd+"\""<<" is not a valid command"<<endl;
@@ -872,9 +920,8 @@ int main(){
     //the user should input again until success 
     while(true){
         cout<<"Please input the csv file name: ";
-        //getline(cin, csv_file_name);
-        //csv_file_name = trim_file_name(csv_file_name);
-        csv_file_name = "haha.csv";
+        getline(cin, csv_file_name);
+        csv_file_name = trim_file_name(csv_file_name);
         int name_len = csv_file_name.length();
         if(name_len < 5 || csv_file_name.substr(name_len-4) != ".csv"){
             cout<<"Error: "<<csv_file_name<<" is not a valid csv file name"<<endl;
@@ -884,25 +931,15 @@ int main(){
             cout<<"Error: cannot open the file "<<csv_file_name<<endl;
         }
         else{
-            cout<<"Open file "<<csv_file_name<<" successful"<<endl;
+            cout<<"Open "<<csv_file_name<<" success"<<endl;
             break;
         }
     }
-    //reading user's command until user input 'quit'
+    //reading user's command
     while(true){
         cout<<">> ";
         string cmd;
         getline(cin, cmd);
-        if(cmd == "quit"){
-            cout<<"Quit? yes(y) or no(n): ";
-            getline(cin, cmd);
-            if(cmd == "n" || cmd == "no" || cmd == "N" || cmd == "NO" || cmd == "No"){
-                continue;
-            }
-            if(cmd == "y" || cmd == "yes" || cmd == "Y" || cmd == "YES" || cmd == "Yes"){
-                break;
-            }
-        }
         if(empty_input(cmd)){
             continue;
         }
